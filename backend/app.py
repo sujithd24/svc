@@ -62,10 +62,10 @@ def upload_file():
         return jsonify({'file': data})
     return jsonify({'file': data})
 
-# get dataset
+# get the forecast chart data (observed + forecasted sales by date) plus error metrics
 @app.route('/get_file', methods=['GET'])
 def get_file():
-    return jsonify(data)
+    return jsonify({'file': data.get('chart', {}), 'error': data.get('error', {})})
 
 # upload no of months to predict
 @app.route('/post_input', methods=['POST'])
@@ -100,7 +100,7 @@ def prediction():
     data['error'] = error
 
     n = int(predict['no.of.months']['n'])
-    predict_module.run_prediction(n)
+    data['chart'] = predict_module.run_prediction(n)
 
     return jsonify({'file': data})
 

@@ -34,24 +34,11 @@ export class ViewComponent implements OnInit {
       } else {
        localStorage.removeItem('reloaded')
       }
-    this.http.get(`${environment.apiUrl}/get_file`).subscribe(response=>{
-      this.results=response
-      console.log(this.results)
-      for (var i in this.results['file']["Unnamed: 0"]){
-        this.labels.push(this.results['file']["Unnamed: 0"][i])
-      }
-      for (var i in this.results['file']["sales"]){
-        this.sales.push(this.results['file']["sales"][i])
-      }
-      for (var i in this.results['file']["forecasted sales"]){
-        this.forecast.push(this.results['file']["forecasted sales"][i])
-      }
-      this.labels=this.labels.map(function(e){return e.toString()})
-      this.sales=this.sales.map(function(e){return e.toString()})
-      this.forecast=this.forecast.map(function(e){return e.toString()})
-      console.log(this.labels)
-      console.log(this.sales)
-      console.log(this.forecast)
+    this.http.get<{ file: { date?: string[]; sales?: number[]; forecasted_sales?: number[] }; error?: any }>(`${environment.apiUrl}/get_file`).subscribe(response=>{
+      this.results = response;
+      this.labels = response.file?.date ?? [];
+      this.sales = response.file?.sales ?? [];
+      this.forecast = response.file?.forecasted_sales ?? [];
       this.RenderChart(this.labels,this.sales,this.forecast);
     })
     

@@ -18,8 +18,10 @@ matplotlib.rcParams['text.color'] = 'k'
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
-def run_prediction(n: int) -> None:
-    """Forecast `n` months ahead and write plot_forecast.png. Runs in-process
+def run_prediction(n: int) -> dict:
+    """Forecast `n` months ahead, write plot_forecast.png, and return the
+    observed + forecasted series as a JSON-friendly dict (date/sales/
+    forecasted_sales) for the frontend's interactive chart. Runs in-process
     (called directly from the Flask request handler) so there's no subprocess
     spawn and no self-HTTP callback into the server that's calling it."""
     with open(os.path.join(APP_ROOT, 'result_pickle'), 'rb') as f:
@@ -56,3 +58,11 @@ def run_prediction(n: int) -> None:
 
     plt.savefig(os.path.join(APP_ROOT, "plot_forecast.png"))
     plt.close('all')
+
+    future_df.index.name = 'date'
+    chart_df = future_df.reset_index().rename(columns={
+        'Sales': 'sales',
+        'forecasted sales': 'forecasted_sales',
+    })
+    chart_df['date'] = chart_df['date'].astype(str)
+    return chart_df[['date', 'sales', 'forecasted_sales']].to_dict(orient='list')
