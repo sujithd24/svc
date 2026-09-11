@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { FormControl, FormGroup, Validators,FormBuilder } from '@angular/forms';
-import {  interval } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { switchMap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {ThemePalette} from '@angular/material/core';
 import { CommonModule } from '@angular/common';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -15,18 +14,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { environment } from '../../environments/environment';
 
-interface Food {
-  value: string;
-  viewValue: string;
-}
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  imports: [ 
-    CommonModule, 
-    MatProgressBarModule,
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
     MatFormFieldModule,
     MatCardModule,
     ReactiveFormsModule,
@@ -38,28 +32,22 @@ interface Food {
 export class DashboardComponent implements OnInit {
 
   getform!: FormGroup;
-  res_status!:boolean;
-  url1=`${environment.apiUrl}/upload_file`;
-  url2=`${environment.apiUrl}/post_input`;
-  file!:any;
-  monthsdict:any;
-  out:any;
-  
-  progressbarValue = 100;
-  curSec: number = 0;
+  res_status = false;
+  isLoading = false;
+  loadingMessage = '';
+  url1 = `${environment.apiUrl}/upload_file`;
+  url2 = `${environment.apiUrl}/post_input`;
+  file: any;
+  fileName = '';
 
-  color : ThemePalette = 'warn';
+  constructor(private http: HttpClient, private router: Router, private _snackBar: MatSnackBar) { }
 
-  constructor(private http: HttpClient ,private router: Router , private _snackBar: MatSnackBar) { }
-
-  fileName: string = '';
-
-  getFile(event:any){
-    this.file=event.target.files[0];
+  getFile(event: any) {
+    this.file = event.target.files[0];
     this.fileName = this.file ? this.file.name : '';
   }
 
-  useSampleData(){
+  useSampleData() {
     this.http.get('/sample-data.csv', { responseType: 'blob' }).subscribe(blob => {
       this.file = new File([blob], 'sample-data.csv', { type: 'text/csv' });
       this.fileName = this.file.name;
@@ -67,53 +55,54 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /*this._snackBar.open('Welcome!!', this.logindata.exform.value.name, {
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      duration: 5000
-    });*/
-    
-    this.res_status=false;
-    this.getform=new FormGroup({
-      'future':new FormControl('',[Validators.required]),
+    this.getform = new FormGroup({
+      'future': new FormControl('', [Validators.required]),
     })
   }
-  onSubmit():void{
 
-   this.monthsdict={ "n":this.getform.value.future}
-   let formData=new FormData();
-   formData.set("file",this.file);
-   
-   this.http.post(this.url1,formData).subscribe((resp)=>{ console.log(resp) })
-   this.http.post(this.url2,this.monthsdict).subscribe((resp2)=>{ console.log(resp2) })
-   this.http.get(`${environment.apiUrl}/prediction`).subscribe(resp=>{
-      console.log(resp)
-      if(resp!=null){
-        this.res_status=true;
-      }
-    })
-  }
-  get future(){
-    return this.getform.get('future')
-  }
-  forecast(){
-    if(this.res_status){
-      this.router.navigate(['/view']);
+  onSubmit(): void {
+    if (!this.file) {
+      this._snackBar.open('Choose a CSV file or use the sample data first.', 'Dismiss', { duration: 4000 });
+      return;
     }
-    
-  }
-  startTimer() {
-    const time = 15;
-    const timer$ = interval(1000);
 
-    const sub = timer$.subscribe((sec) => {
-      this.progressbarValue = 100 - sec * 100 / time;
-      this.curSec = sec;
+    this.res_status = false;
+    this.isLoading = true;
+    this.loadingMessage = 'Uploading data…';
 
-      if (this.curSec === time) {
-        sub.unsubscribe();
+    const monthsdict = { "n": this.getform.value.future };
+    const formData = new FormData();
+    formData.set("file", this.file);
+
+    this.http.post(this.url1, formData).pipe(
+      switchMap(() => {
+        this.loadingMessage = 'Saving forecast settings…';
+        return this.http.post(this.url2, monthsdict);
+      }),
+      switchMap(() => {
+        this.loadingMessage = 'Generating forecast… this can take a little while.';
+        return this.http.get(`${environment.apiUrl}/prediction`);
+      })
+    ).subscribe({
+      next: (resp) => {
+        this.isLoading = false;
+        this.res_status = resp != null;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this._snackBar.open('Forecast failed. Please try again.', 'Dismiss', { duration: 5000 });
+        console.error(err);
       }
     });
   }
+
+  get future() {
+    return this.getform.get('future')
+  }
+
+  forecast() {
+    if (this.res_status) {
+      this.router.navigate(['/view']);
+    }
+  }
 }
- 

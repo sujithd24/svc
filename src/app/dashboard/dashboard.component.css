@@ -43,6 +43,17 @@
   width: 100%;
 }
 
+.loading-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loading-text {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 .actions {
   display: flex;
   gap: 12px;
