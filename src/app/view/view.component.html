@@ -1,0 +1,33 @@
+<app-header></app-header>
+<body>
+    <button (click)="reloadPage()" class="button_color">Show CURRENT CHART</button>
+    <div class="pos1">
+        <mat-card class="example-card" >`
+            <h2 style="text-align:center ;">Nerdistics</h2>
+            <hr class="new" >
+            <img [src]="plotUrl">
+            <br>
+            <div style="text-align:center ;"> 
+               
+                <div style="font-size: 14px;">Model : {{results?.error?.MODEL}}</div><br>
+                      <div style="font-size: 14px;">Performance metrics : </div>
+            </div>
+            <ul>
+                          <li>
+                              <div style="font-size: 14px;">&emsp;MAE : {{results?.error?.MAE}}</div>
+                          </li>
+                          <li>
+                              <div style="font-size: 14px;">&emsp;MSE : {{results?.error?.MSE}}</div>
+                          </li>
+                          <li>
+                              <div style="font-size: 14px;">&emsp;RMSE : {{results?.error?.RMSE}}</div>
+                          </li>
+                          <li>
+                            <div style="font-size: 14px;">&emsp;MAPE : {{results?.error?.MAPE}} %</div>
+                        </li>
+            </ul> <br>
+            <canvas id="MyChart"></canvas>
+        </mat-card>
+    </div>
+
+</body>

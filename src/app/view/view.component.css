@@ -1,0 +1,33 @@
+body{
+    background-image: url('../../assets/papers.co-vn72-galaxy-s7-white-red-pattern-3840x2400.jpg');
+    background-size: cover;
+} 
+.pos1{
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+hr.new {
+    border: 1px solid rgb(10, 149, 176);
+  }
+.example-card {
+    width: 800px;
+    height: 600px;
+}
+.example-full-width {
+    width: 300px;
+}
+.spacer{
+    flex: 1 1 auto;
+}
+.fontfam{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+
+}
+
+.button_color{
+    background: rgb(10, 149, 176);
+    color: whitesmoke;
+}

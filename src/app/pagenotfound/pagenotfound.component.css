@@ -1,0 +1,47 @@
+body{
+    background-image: url('../../assets/pexels-pixabay-235621.jpg');
+    background-size: cover;
+    background-size: 100%;
+}
+
+.head1 {text-align: center;
+    font-style: italic;
+    font-family: cursive;
+    color: white;
+}
+.head2{
+    color: white;
+    font-family:cursive;
+}
+.head3 {text-align: center;
+    font-style: italic;
+    font-family: cursive;
+    color: black;
+}
+.center{
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%); 
+    color: rgb(255, 255, 255);
+    font-family: Lucida Bright;
+    font-size:xx-large;
+}
+.center_img{
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%); 
+}
+.spacer{
+    flex: 1 1 auto;
+}
+.color{
+    background: rgb(245, 245, 245);
+}
+.button_color{
+    background: rgb(40, 39, 39);
+    color: whitesmoke;
+}

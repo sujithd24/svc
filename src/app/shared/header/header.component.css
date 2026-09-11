@@ -1,0 +1,25 @@
+.spacer{
+    flex: 1 1 auto;
+}
+.button_color{
+    background: whitesmoke;
+    color: rgb(40, 39, 39);
+}
+::ng-deep .mat-toolbar{
+    z-index: 999;
+    position: fixed
+  }
+  ::ng-deep .mat-tab-group{
+    margin-top:55px !important;
+  }
+  
+  ::ng-deep .mat-tab-header{
+        z-index: 999;
+        width:100vw;
+        position: fixed  !important;
+  }
+  ::ng-deep .mat-tab-body-wrapper{
+      position: relative !important;
+      margin-top:55px;
+  }
+  

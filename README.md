@@ -2,6 +2,51 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.3.
 
+A sales-forecasting app: Angular frontend + Flask API, deployed together as **one Render web service**.
+
+- `src/` — the Angular app (plain client-side SPA, no SSR).
+- `backend/` — the Flask API (`app.py`, `predict.py`, sample data, etc.).
+- `Dockerfile` — builds the Angular app, then packages it with the Flask backend into a single image. Flask serves the built static files *and* the API from the same process/port.
+
+## Backend URL
+
+`src/environments/environment.ts` (dev) points `apiUrl` at `http://localhost:5000` for local development against a separately-running Flask server. `environment.prod.ts` sets `apiUrl: ''` (relative/same-origin), since in production Flask serves both the app and the API from the same host.
+
+## Deploying on Render
+
+Deploy as a **Web Service** using the Docker runtime (a `render.yaml` is included, or set manually):
+
+- Runtime: Docker
+- Dockerfile path: `./Dockerfile`
+- Render sets `PORT` automatically; `backend/app.py` and the Dockerfile's `CMD` both read it.
+
+That's it — one service, one URL, no CORS to configure for production.
+
+## Local development
+
+Run the two pieces separately so Angular's dev server can hot-reload:
+
+```bash
+# Terminal 1 — backend
+cd backend
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python app.py            # http://localhost:5000
+
+# Terminal 2 — frontend
+npm install
+npm start                 # http://localhost:4200, talks to localhost:5000
+```
+
+To run it the way it deploys (one process, one port), build the frontend first and let Flask serve it:
+
+```bash
+npm run build              # outputs dist/svc/browser
+cd backend
+python app.py               # now also serves the built frontend at http://localhost:5000
+```
+
 ## Development server
 
 To start a local development server, run:

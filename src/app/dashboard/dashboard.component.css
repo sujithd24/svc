@@ -1,0 +1,63 @@
+body{
+    background-image: url('../../assets/papers.co-vn72-galaxy-s7-white-red-pattern-3840x2400.jpg');
+    background-size: cover;
+}
+
+.imgpos{
+    position: absolute;
+    top: 45%;
+    left: 89%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+}
+hr.new {
+    border: 1px solid rgb(10, 149, 176);
+  }
+.position{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 400px;
+}
+.example-card {
+    width: 600px;
+  }
+.upload-box{
+    font-size: 14px;
+    color:  rgb(10, 149, 176);
+    background: rgb(255, 255, 255);
+    border-radius: 50px;
+    box-shadow: 1px 0 1px 1px  rgb(10, 149, 176);
+    width: 300px;
+    outline: none;
+    
+}
+::-webkit-file-upload-button{
+    background-color: rgb(10, 149, 176);
+    padding: 20px;
+    border: rgb(10, 149, 176);
+    border-radius: 50px;
+    color: rgb(255, 255, 255);
+    
+    outline: none;
+}
+.example-full-width {
+    width: 300px;
+}
+.button_color{
+    background: rgb(10, 149, 176);
+    color: whitesmoke;
+}
+.filename{
+    font-size: 12px;
+    color: rgb(10, 149, 176);
+    margin-top: 4px;
+}
+.color{
+    background: rgb(245, 245, 245);
+}
