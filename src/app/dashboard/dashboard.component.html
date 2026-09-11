@@ -1,29 +1,29 @@
 <app-header></app-header>
-<body>
-    <mat-card class="position">
-        <br>
-        <form  [formGroup]="getform" style="text-align:center ;" (ngSubmit)="onSubmit()">
-            <h2>Input</h2>
-            <hr class="new"><br><br><img src="/Load.gif" class="imgpos">
-            <input type="file" class="upload-box" name="file" accept=".csv" (change)="getFile($event)">
-            <br><br>
-            <button type="button" mat-stroked-button class="button_color" (click)="useSampleData()">Use Sample Data</button>
-            <div *ngIf="fileName" class="filename">Selected: {{fileName}}</div>
-            <br><br>
-            <mat-form-field class="example-full-width" appearance="fill">
-                <mat-label >No.of months</mat-label>
-                <input matInput placeholder="Ex. 12" formControlName="future">
-                <mat-error *ngIf="future && future.invalid && future.touched" style="color: darkpink;">Prediction time is required </mat-error>
-            </mat-form-field>
-            <br><br>
-            <mat-card-actions>
-                <button [disabled]="getform.invalid" mat-raised-button class="button_color" (click)="startTimer()">Submit</button>
-                <button [disabled]="getform.invalid" mat-raised-button class="button_color" (click)="forecast()">View data</button>
-            </mat-card-actions>
-            <br>
-            <mat-progress-bar mode="determinate" [value]="progressbarValue" [color]="color"></mat-progress-bar>
-        </form>
-        
-    </mat-card>
-    
-</body>
+<div class="page">
+  <mat-card class="card">
+    <h1 class="card-title">Sales Forecast</h1>
+    <p class="card-subtitle">Upload a sales CSV or use the sample dataset, then choose how many months to forecast.</p>
+
+    <form [formGroup]="getform" (ngSubmit)="onSubmit()" class="form">
+      <div class="upload-row">
+        <input type="file" id="file-input" class="file-input" accept=".csv" (change)="getFile($event)">
+        <label for="file-input" class="file-label">Choose CSV File</label>
+        <button type="button" mat-stroked-button color="primary" (click)="useSampleData()">Use Sample Data</button>
+      </div>
+      <div *ngIf="fileName" class="filename">Selected: {{fileName}}</div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Months to forecast</mat-label>
+        <input matInput placeholder="e.g. 12" formControlName="future">
+        <mat-error *ngIf="future && future.invalid && future.touched">Prediction time is required</mat-error>
+      </mat-form-field>
+
+      <mat-progress-bar *ngIf="curSec > 0 && curSec < 15" mode="determinate" [value]="progressbarValue" color="primary"></mat-progress-bar>
+
+      <div class="actions">
+        <button [disabled]="getform.invalid" mat-raised-button color="primary" type="submit" (click)="startTimer()">Run Forecast</button>
+        <button [disabled]="!res_status" mat-stroked-button color="primary" type="button" (click)="forecast()">View Results</button>
+      </div>
+    </form>
+  </mat-card>
+</div>

@@ -1,33 +1,38 @@
 <app-header></app-header>
-<body>
-    <button (click)="reloadPage()" class="button_color">Show CURRENT CHART</button>
-    <div class="pos1">
-        <mat-card class="example-card" >`
-            <h2 style="text-align:center ;">Nerdistics</h2>
-            <hr class="new" >
-            <img [src]="plotUrl">
-            <br>
-            <div style="text-align:center ;"> 
-               
-                <div style="font-size: 14px;">Model : {{results?.error?.MODEL}}</div><br>
-                      <div style="font-size: 14px;">Performance metrics : </div>
-            </div>
-            <ul>
-                          <li>
-                              <div style="font-size: 14px;">&emsp;MAE : {{results?.error?.MAE}}</div>
-                          </li>
-                          <li>
-                              <div style="font-size: 14px;">&emsp;MSE : {{results?.error?.MSE}}</div>
-                          </li>
-                          <li>
-                              <div style="font-size: 14px;">&emsp;RMSE : {{results?.error?.RMSE}}</div>
-                          </li>
-                          <li>
-                            <div style="font-size: 14px;">&emsp;MAPE : {{results?.error?.MAPE}} %</div>
-                        </li>
-            </ul> <br>
-            <canvas id="MyChart"></canvas>
-        </mat-card>
+<div class="page">
+  <mat-card class="card view-card">
+    <div class="view-header">
+      <h1 class="card-title">Forecast Results</h1>
+      <button mat-stroked-button color="primary" (click)="reloadPage()">Refresh</button>
     </div>
 
-</body>
+    <img [src]="plotUrl" class="forecast-image" alt="Forecast chart">
+
+    <div class="metrics">
+      <div class="metric-tile">
+        <span class="metric-label">Model</span>
+        <span class="metric-value">{{results?.error?.MODEL || '—'}}</span>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-label">MAE</span>
+        <span class="metric-value">{{results?.error?.MAE | number:'1.0-2'}}</span>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-label">MSE</span>
+        <span class="metric-value">{{results?.error?.MSE | number:'1.0-2'}}</span>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-label">RMSE</span>
+        <span class="metric-value">{{results?.error?.RMSE | number:'1.0-2'}}</span>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-label">MAPE</span>
+        <span class="metric-value">{{results?.error?.MAPE | number:'1.0-2'}}%</span>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="MyChart"></canvas>
+    </div>
+  </mat-card>
+</div>
